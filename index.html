@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Recipe</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Quick Recipe</h1>
+    </header>
+
+    <main>
+        <section id="search-section">
+            <input list="ingredient-list" type="text" id="ingredient-input" placeholder="Enter ingredient" />
+            <button id="find-btn">Find Recipes</button>
+        </section>
+
+        <section id="recipes-section">
+            <h2>Results</h2>
+            <div id="recipe-list" class="recipe-grid">
+                <!-- Recipe cards section -->
+            </div>
+        </section>
+    </main>
+
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+    <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
