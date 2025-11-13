@@ -2,30 +2,51 @@ const detailsDiv = document.getElementById("recipe-details");
 const params = new URLSearchParams(window.location.search);
 const recipeId = params.get("id");
 
+function createSafeElement(tag, text) {
+    const el = document.createElement(tag);
+    el.textContent = text;
+    return el;
+}
+
 if (!recipeId) {
-    detailsDiv.innerHTML = "<p>Invalid recipe.</p>";
+    detailsDiv.innerHTML = "";
+    detailsDiv.appendChild(createSafeElement("p", "Invalid recipe."));
 } else {
-    // Call backend endpoint for recipe details
-    fetch(`https://your-backend-on-render.onrender.com/api/recipe/${recipeId}`)
-        .then(res => res.json())
+    fetch(`https://your-backend-on-render.onrender.com/api/recipe/${encodeURIComponent(recipeId)}`)
+        .then(res => {
+            if (!res.ok) throw new Error("Failed to load recipe");
+            return res.json();
+        })
         .then(recipe => {
+            detailsDiv.innerHTML = "";
+
             if (!recipe || !recipe.extendedIngredients) {
-                detailsDiv.innerHTML = "<p>Recipe details not available.</p>";
+                detailsDiv.appendChild(createSafeElement("p", "Recipe details not available."));
                 return;
             }
 
-            const ingredients = recipe.extendedIngredients
+            const title = createSafeElement("h2", recipe.title || "Untitled Recipe");
+            detailsDiv.appendChild(title);
+
+            if (recipe.image) {
+                const img = document.createElement("img");
+                img.src = recipe.image;
+                img.alt = recipe.title || "Recipe Image";
+                detailsDiv.appendChild(img);
+            }
+
+            const ingredientsText = recipe.extendedIngredients
                 .map(i => `${i.name} - ${i.amount} ${i.unit}`)
                 .join(", ");
+            const ingredients = createSafeElement("p", `Ingredients: ${ingredientsText}`);
+            detailsDiv.appendChild(ingredients);
 
-            detailsDiv.innerHTML = `
-                <h2>${recipe.title}</h2>
-                <img src="${recipe.image}" alt="${recipe.title}" />
-                <p><strong>Ingredients:</strong> ${ingredients}</p>
-                <p><strong>Instructions:</strong> ${recipe.instructions || "N/A"}</p>
-            `;
+            const instructions = createSafeElement("p", `Instructions: ${recipe.instructions || "N/A"}`);
+            detailsDiv.appendChild(instructions);
         })
         .catch(err => {
-            detailsDiv.innerHTML = `<p>Error loading recipe: ${err}</p>`;
+            detailsDiv.innerHTML = "";
+            detailsDiv.appendChild(createSafeElement("p", "Error loading recipe. Please try again later."));
+            console.error(err);
         });
 }
