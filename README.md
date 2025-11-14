@@ -24,12 +24,17 @@ A simple web app that helps you find recipes based on the ingredients you have a
 2. The frontend has no dependencies. Open index.html in your browser.
 
 ## Backend Requirement
-This frontend requires a backend server that provides recipe data. By default, it expects the backend API to be running and accessible on Render. The backend securely handles the Spoonacular API key and validates all inputs.
+This frontend requires a backend server that provides recipe data. By default, it expects the backend API to be running and accessible on Railway. The backend securely handles the Spoonacular API key and validates all inputs.
 
 ## Usage
 1. Enter ingredients in the search box (comma-separated)
 2. Click **Find Recipes**. The frontend will request the backend, which fetches recipes from Spoonacular.
 3. Click **Prepare** on a recipe card to view recipe details (ingredients, instructions, images).
+
+**Note:** The Spoonacular API has request limits.  
+Because of this, the number of recipes returned may be limited.  
+At times, you may see no recipes if the API limit has been exceeded.
+
 
 ## Access and Rights
 This project is public for **viewing purposes only**.
