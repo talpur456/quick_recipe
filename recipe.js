@@ -2,6 +2,8 @@ const detailsDiv = document.getElementById("recipe-details");
 const params = new URLSearchParams(window.location.search);
 const recipeId = params.get("id");
 
+const BACKEND_URL = "https://quickrecipebackend-production.up.railway.app";
+
 function createSafeElement(tag, text) {
     const el = document.createElement(tag);
     el.textContent = text;
@@ -12,14 +14,13 @@ if (!recipeId) {
     detailsDiv.innerHTML = "";
     detailsDiv.appendChild(createSafeElement("p", "Invalid recipe."));
 } else {
-    fetch(`https://your-backend-on-render.onrender.com/api/recipe/${encodeURIComponent(recipeId)}`)
+    fetch(`${BACKEND_URL}/api/recipe/${encodeURIComponent(recipeId)}`)
         .then(res => {
             if (!res.ok) throw new Error("Failed to load recipe");
             return res.json();
         })
         .then(recipe => {
             detailsDiv.innerHTML = "";
-
             if (!recipe || !recipe.extendedIngredients) {
                 detailsDiv.appendChild(createSafeElement("p", "Recipe details not available."));
                 return;
@@ -38,11 +39,10 @@ if (!recipeId) {
             const ingredientsText = recipe.extendedIngredients
                 .map(i => `${i.name} - ${i.amount} ${i.unit}`)
                 .join(", ");
-            const ingredients = createSafeElement("p", `Ingredients: ${ingredientsText}`);
-            detailsDiv.appendChild(ingredients);
+            detailsDiv.appendChild(createSafeElement("p", `Ingredients: ${ingredientsText}`));
 
-            const instructions = createSafeElement("p", `Instructions: ${recipe.instructions || "N/A"}`);
-            detailsDiv.appendChild(instructions);
+            const instructions = recipe.instructions || "N/A";
+            detailsDiv.appendChild(createSafeElement("p", `Instructions: ${instructions}`));
         })
         .catch(err => {
             detailsDiv.innerHTML = "";
